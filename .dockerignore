@@ -1,0 +1,9 @@
+.devcontainer/
+.git/
+results/
+
+.dockerignore
+.gitignore
+Dockerfile
+.gitlab-ci.yml
+

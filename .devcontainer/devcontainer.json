@@ -1,6 +1,9 @@
 {
-    "name": "well-known-crawler",
-    "dockerFile": "Dockerfile",
+    "name": "well-known-analysis",
+    "build": {
+        "dockerfile": "../Dockerfile",
+        "target": "vscode_dev"
+    },
     "postCreateCommand": "",
     "customizations": {
         "vscode": {
@@ -8,9 +11,7 @@
                 // Other helpers
                 "shardulm94.trailing-spaces",
                 "stkb.rewrap", // rewrap comments after n characters on one line
-                "ms-python.python",
-                "ms-python.vscode-pylance",
-                "ms-python.black-formatter",
+                "golang.go",
                 "tomoki1207.pdf"
             ],
             "settings": {

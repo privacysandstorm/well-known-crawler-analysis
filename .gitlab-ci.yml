@@ -1,0 +1,16 @@
+build:
+  image: docker
+  stage: build
+  services:
+    - docker:dind
+
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
+    - docker run -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY amazon/aws-cli ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+
+  script:
+    - docker pull $CI_REGISTRY_IMAGE || true
+    - DOCKER_BUILDKIT=1 docker build --cache-from $CI_REGISTRY_IMAGE --tag $CI_REGISTRY_IMAGE --target analysis .
+    - docker tag $CI_REGISTRY_IMAGE:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/well-known-analysis:latest
+    - docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/well-known-analysis:latest
+    - docker push $CI_REGISTRY_IMAGE
