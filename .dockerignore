@@ -1,6 +1,7 @@
 .devcontainer/
 .git/
 results/
+analysis/
 
 .dockerignore
 .gitignore
