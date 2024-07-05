@@ -8,7 +8,10 @@ attestation_known_apis_suffix=attestation_known_apis.tsv
 attestation_known_origins_suffix=attestation_known_origins.json
 rws_known_origins_suffix=rws_known_origins.json
 
-rm -r $analysis_dir && mkdir -p $analysis_dir
+
+if [ -d $analysis_dir ]; then
+  rm -r $analysis_dir && mkdir -p $analysis_dir
+fi
 
 #get file storing filename of where last analysis stopped
 if [[ -z "$S3_ANALYSIS_BUCKET" ]];then
@@ -44,7 +47,7 @@ else
         if [ $filename_time -gt $stop_time ]
         then
             echo "Copying $filename_timestamp.tar.zst from S3 bucket"
-            aws s3 cp s3://$S3_DATA_BUCKET/$filename_timestamp.tar.zst - | tar --zstd -xf -C $raw_results_dir/
+            aws s3 cp s3://$S3_DATA_BUCKET/$filename_timestamp.tar.zst - | tar --zstd -xf - -C $raw_results_dir/
         fi
     done <<< "$s3_filenames"
 fi
