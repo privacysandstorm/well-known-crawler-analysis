@@ -49,10 +49,14 @@ else
         if [ $filename_time -gt $stop_time ]
         then
             echo "Copying $filename_timestamp.tar.zst from S3 bucket"
-            aws s3 cp s3://$S3_DATA_BUCKET/$filename_timestamp.tar.zst - | tar --zstd -xf - -C $raw_results_dir/
+            aws s3 cp s3://$S3_DATA_BUCKET/$filename_timestamp.tar.zst $raw_results_dir/$filename_timestamp.tar.zst
+            tar --zstd -xf $raw_results_dir/$filename_timestamp.tar.zst -C $raw_results_dir/
+            rm $raw_results_dir/$filename_timestamp.tar.zst
         fi
     done <<< "$s3_filenames"
 fi
+
+exit
 
 #for loop on results folder, check again if time is greater, if so, run
 #analysis, and update times
