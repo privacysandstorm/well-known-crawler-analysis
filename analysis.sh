@@ -21,10 +21,12 @@ fi
 last_timestamp=$(cat $last_analysis_stop_time | sed 's/-/ /g' | sed 's/_/-/g' | sed 's/-/:/g3')
 stop_time=$(date --date "$last_timestamp" +'%s')
 
+echo "Start Analysis last timestamp was: $last_timestamp"
 
 if [[ -z "$S3_DATA_BUCKET" ]];then
     echo "S3_DATA_BUCKET undefined, assuming local run: not grabbing crawl results from s3"
 else
+    echo "Copying well known generic files from S3 bucket"
     #get files from S3 bucket
     aws s3 cp s3://$S3_DATA_BUCKET/$attestation_known_apis_suffix ${analysis_dir}/${attestation_known_apis_suffix}
     aws s3 cp s3://$S3_DATA_BUCKET/$attestation_known_origins_suffix ${analysis_dir}/${attestation_known_origins_suffix}
@@ -41,6 +43,7 @@ else
 
         if [ $filename_time -gt $stop_time ]
         then
+            echo "Copying $filename_timestamp.tar.zst from S3 bucket"
             aws s3 cp s3://$S3_DATA_BUCKET/$filename_timestamp.tar.zst - | tar --zstd -xf -C $raw_results_dir/
         fi
     done <<< "$s3_filenames"
