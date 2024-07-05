@@ -49,6 +49,8 @@ else
     done <<< "$s3_filenames"
 fi
 
+exit
+
 #for loop on results folder, check again if time is greater, if so, run
 #analysis, and update times
 for crawl_filename in $raw_results_dir/*
