@@ -13,6 +13,8 @@ if [ -d $analysis_dir ]; then
   rm -r $analysis_dir && mkdir -p $analysis_dir
 fi
 
+mkdir -p $raw_results_dir
+
 #get file storing filename of where last analysis stopped
 if [[ -z "$S3_ANALYSIS_BUCKET" ]];then
     echo "S3_ANALYSIS_BUCKET undefined, assuming local run: not grabbing $last_analysis_stop_time from s3"
@@ -51,8 +53,6 @@ else
         fi
     done <<< "$s3_filenames"
 fi
-
-exit
 
 #for loop on results folder, check again if time is greater, if so, run
 #analysis, and update times
